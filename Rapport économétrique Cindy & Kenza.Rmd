@@ -1,0 +1,1042 @@
+---
+title: <span style="color:darkblue"> *L'influence des ventes de l'entreprise sur le
+  salaire du dirigeant* </span>
+author: "Cindy Da Cruz Porfirio et Kenza Hamaz"
+date: "15/12/2021"
+output:
+  pdf_document:
+    toc: yes
+  html_document:
+    toc: yes
+    theme: united
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo=FALSE,warning=FALSE,message=FALSE)
+```
+
+## <span style="color:darkblue">I. Introduction</span>
+
+Dans un climat social dégradé, la rémunération des PDG est un sujet qui fait débat notamment lorsqu’il s’agit de définir ce qui la détermine, ou encore ce qui cause de si grandes différences dans la rémunération des PDG entre eux. Ces rémunérations spectaculaires (déconnectées du réel)que ce soit à propos des parachutes dorés, des retraites chapeau ou des simples bonus posent beaucoup de questions.
+Fixée par le conseil d’administration ou de surveillance de l’entreprise, celle-ci semble répondre à des logiques difficiles à cerner. De plus, les écarts observées sur les rémunérations entre les patrons des entreprises du CAC40 et les salariés n'ont jamais été aussi élevés. Comment peut-on justifier qu'un dirigeant gagne 200 fois plus qu'un  ouvrier non qualifié ? (Teulon, 2013).  Ces éléments soulèvent de réels enjeux au niveau de la justice et de l'équité sociale. C'est pourquoi, il nous paraît intéressant de se pencher sur ses déterminants. 
+
+La question que l'on se pose et à laquelle on va tenter de répondre est si la performance de l’entreprise (représentée par ses ventes) a un effet significatif sur la rémunération du PDG ? Autrement dit, nous voulons estimer dans ce rapport l’effet des ventes d’une entreprise sur la rémunération de son PDG. 
+Pour cela nous disposons de deux bases de données Ceosal1 et Ceosal2 disponibles dans le package Wooldridge. 
+Dans un premier temps nous nous sommes appuyées sur la base de données Ceosal1, qui présente un échantillon aléatoire de données rapportées dans le numéro du 6 mai 1991 de Businessweek qui s’interesse notamment au salaire des pdg.
+
+Cet échantillon contient 209 observations sur 12 variables. De cette base de données nous avons conservé les variables lsalary, qui correspond au logarithme de la variable salary (salaire de 1990, en milliers de dollars), de la variable lsales, logarithme de la variable sales (c’est-à-dire les ventes de 1990 en millions de $), et enfin nous avons également sélectionné 4 variables binaires (indus: =1 si entreprise industrielle, finance: =1 si entreprise financière, consprod: =1 si entreprise de produits de consommation, utility : =1 si entreprise de transport. ou utilités) qui témoignent du type d’activité de l'entreprise et que nous avons rassemblées en une nouvelle variable “secteur”. Il s’agissait de variables corrélées à lsalary, et/ou suggérées par la littérature.
+Les résultats que nous avons obtenus ne nous ont pas entièrement convaincu, raison pour laquelle nous nous sommes lancées dans la même démarche avec la base de données Ceosal2 lors de l’étape de validation interne des résultats.
+
+Cette base présente un autre échantillon aléatoire de données provenant de la même population, mais contenant plus d'informations sur le PDG, en plus de celles sur l'entreprise. Finalement on retrouve 177 observations sur 15 variables qui sont:  le salaire du pdg de 1990, en milliers de $ (salary), mais nous conserverons son logarithme (lsalary) dans notre étude.
+Nous retrouvons également des variables concernant le pdg à savoir son âge (variable age), et sa fréquentation ou non des établissements scolaires, représentée par les variables college (1 si fréquentation du lycée, 0 dans le cas contraire) et grad (1 si fréquentation d'un établissement d'enseignement supérieur, 0 dans le cas contraire). Le nombre d’années qu’il a passé au sein de la compagnie peu importe le poste (comten et son carré comtensq), et le nombre d’années qu’il a passé en tant que PDG avec l’entreprise (ceoten et son au carré ceotensq). De toutes ces variables nous n’avons conservé que ceoten, car aucune d’entre elles ne répondait à un test de corrélation avec lsalary (et encore moins avec salary). 
+Nous retrouvons ensuite des variables relatives à l’entreprise, à savoir le total des ventes de la firme en 1990 en millions (sales), mais nous conserverons son logarithme (lsales). Nous observons également une corrélation entre la variable lsalary et la variable relative aux bénéfices de l’années 1990 en millions (profits), et celle qui correspond à la valeur marchande de l’entreprise fin 1990  (mktval) et son logarithme (lmktval).Pour traiter les données dans notre rapport économétrique, nous utiliserons la méthode des moindres carrés ordinaires.
+
+Ainsi, à  partir de toutes ces données, nous avons tenté de déterminer quelle était leur influence sur le salaire des pdg en 1990, et nous avons trouvé pour principal résultat à notre étude qu’une variation de lsales (représentant la performance de l'entreprise) était ce qui expliquait le mieux une variation du salaire du pdg et que si celle ci était faible elle est en revanche très significative et robuste. Mais nous ne sommes parvenu à expliquer que 30% de la variation du salaire.  Dans un premier temps, nous discuterons des littératures pertinentes et de la théorie économique avant de décrire les données traitées. Pour finir, nous ferons une analyse des résultats empiriques et nous nous interrogerons sur les variables potentiellement omises pouvant expliquer de tels salaires, ou encore de telles différences entre les salaires des différents pdg.
+ 
+<br>  
+  
+## <span style="color:darkblue">II. Revue de la littérature</span>
+
+Les variables que nous avons sélectionnées n’ont bien sûr pas été prises au hasard. La rémunération du pdg est un sujet très largement étudié par la recherche et Manuere dans son survey “A Literature Review of the Perspectives of CEO Pay: An Analysis of Issues and Controversies” passe en revue les diverses théories que l’on retrouve dans la littérature pour déterminer la rémunération des dirigeants. 
+<br>  
+Ce qui détermine la rémunération des pdg est difficile à définir car sa composition est large selon Finkelstein et Hambrick (1998). On distingue “le salaire, les primes, les avantages sociaux, les stocks-options, les cotisations de retraite, les revenus conditionnels à long terme”. 
+Il apparaît en général que la taille de l'entreprise est utilisée pour justifier le niveau de rémunération des dirigeants (Jensen et Meckling, 1976)”. 
+<br>  
+Mais de nombreuses études s’opposent sur l’idée de la relation entre les performances des entreprises et la rémunération des dirigeants. 
+Si pour Ozkan (2007) il existe une relation positive, l’étude de Brick et al (2005) met en avant une forte corrélation négative entre les deux. Pour Zhou (2000), professeur agrégé en finance, la rémunération des dirigeants est liée positivement à la taille de l’entreprise mais dépend des performances de celle-ci. 
+Les facteurs de la rémunération du dirigeant sont multiples. 
+<br>  
+Tout d’abord, pour Murphy (1999), celle-ci est hétérogène selon les secteurs et les entreprises. Le niveau de rémunération est déterminé par “un salaire de base, une prime annuelle liée à la performance comptable, des stocks-options et enfin des plans d’intéressement à long terme”. Shah et al (2009) distinguent sept facteurs influençant les niveaux de rémunérations dans les entreprises: “ la taille de l’entreprise, la dualité du PDG, l'indépendance du conseil, la structure de propriété, la concentration de la propriété et enfin l’indépendance du comité d’audit”. Selon Kim et Tucker (2014), ces facteurs sont “la taille de l’entreprise, la qualité et la quantité de travailleurs, le sexe , le rendement des actifs et la gouvernance de l’entreprise”. Pour Raheka (2005), c’est la composition du conseil d'administration qui a un effet direct sur la fixation du salaire du PDG. En effet, selon Finkelstein et Hambrick (1988) dans James (2014), la politique de l'organisation est le  principal élément de la rémunération des dirigeants. Boyd (1994) soutient l’idée d’une relation positive entre la rémunération des dirigeants et la composition du conseil. 
+La présence des actionnaires institutionnels jouerait négativement sur la rémunération des dirigeants. L’étude de Hartzell et Starks (2003) montre que le niveau élevé d’investisseurs institutionnels est lié à une mauvaise rémunération des dirigeants. 
+<br>  
+Plusieurs théories issues de diverses approches (symbolique, de valeur et de l’agence) évoquent la relation entre ces deux éléments . L’approche symbolique (d’où son nom) justifie la  rémunération des dirigeants par la forte estime accordée au dirigeant (Gomez et Meija). Tandis que l’approche de valeur se base sur la loi de l’économie autrement dit la confrontation entre l’offre et la demande. Selon la théorie néoclassique, la productivité du salarié (expliquée par le capital humain) détermine le niveau de salaire. La théorie du capital humain est forgée au début des années 1960 par Theodore Schultz puis popularisée par Gary Becker. L’éducation est considérée comme un investissement pour l’individu. Celui-ci cherche à maximiser ses revenus futurs au regard du coût de ses études (arbitrage propre à chacun entre ce que ça coûte et l’accroissement du salaire). Ce modèle exprime l’idée que le revenu dépend de l’éducation et du niveau de formation. L’objectif est d'optimiser le niveau de formation pour obtenir le meilleur salaire. Selon la théorie du salaire d’efficience, et plus précisément Balsam (2002), le haut salaire des cadres (par rapport au salaire fixé par le marché) est un moyen de les garder au sein de l’entreprise. 
+<br>  
+Pour Gomez-Meija et Wiseman (1997), le niveau de rémunération des dirigeants résulte du problème d’agence. Le conflit entre les deux acteurs (actionnaire et dirigeant) est mis en évidence par la théorie du principal-agent. L’agent (le PDG) doit rendre des comptes aux actionnaires. Dans toutes relations entre deux personnes , il y a une asymétrie d’information. Autrement dit, l’un des deux sait un peu plus par rapport à l’autre sur les conditions concrètes de l’entreprise. C’est l’agent  qui a le plus de connaissances sur l’entreprise. Cependant celui-ci est censé agir en faveur des actionnaires. Étant donné cette asymétrie d’information, l’agent peut prendre des décisions contraires aux intérêts des actionnaires, car ne visant plus à fournir le plus grand dividendes aux actionnaires mais en recherchant une augmentation de la taille de l’entreprise. La stratégie obéit à d’autres considérations rationnelles logiques pouvant conduire à une baisse de la rentabilité de l’entreprise et ne correspondant pas aux intérêts du principal (les actionnaires). Compte tenu des visions éloignées des deux acteurs, la rémunération du dirigeant serait un outil favorisant l’alignement des intérêts des dirigeants à ceux des actionnaires. 
+Pour Balsam (2000), celle-ci s’explique plutôt par la plus grande prise de risque des dirigeants. Gomez- Meija (1994) montrent que les trois approches reposent sur une relation négative entre la rémunération des dirigeants et la performance des entreprises. En effet, pour Aquilera et Jackson (2003), celle-ci dépend à la fois de leur fort pouvoir décisionnel au sein du conseil d’administration et de leur pouvoir de négociation sur la structure de leur rémunération. Les trois approches vues ci-dessus sont confrontées à plusieurs limites. Celles-ci ne prennent pas en compte l’influence des dispositifs utilisés par le conseil d'administration ou encore l’effet des forces extérieures (telles que le gouvernement, le syndicat ou les institutions financières) pourtant essentielles pour Zingales (1998). La forte disparité des rémunérations des dirigeants de différentes organisations s’explique par des phénomènes sociaux.
+
+<br>
+De même, l'étude de Deckop qui s’appuie sur les données de 120 entreprises dans le temps sur la période 1977-1981 est étroitement liée à notre sujet puisqu’elle vise à montrer quels sont les déterminants de la rémunération des dirigeants. Pour cela, l’auteur examine les corrélations existantes entre la rémunération du chef de la direction (PDG) et d’autres variables,  avec un accent particulier sur des variables de mesure de la performance d’entreprise mais aussi en prenant en considération d’autres déterminants possibles de la rémunération tels que les effets de l'industrie, l'expérience du PDG ou encore les moyens par lesquels le PDG a atteint son poste. Cette étude a ainsi apporté une plus value sur la question, car les recherches antécédentes qui avaient également tenté d’expliquer les déterminants de la rémunération des PDG se basaient sur les trois variables qui concernent la performance des entreprises à savoir les bénéfices, les ventes et la valeur des actions de l’entreprise sur le marché, mais n’étaient pas parvenu à spécifier un modèle incluant d’autres variables potentiellement explicatives, et constituant donc un biais. Dans cette étude l’auteur lui y parvient en proposant un modèle qui comprend certes les trois variables de performance de l’entreprise, mais également une variable à trois niveaux indiquant comment le poste de PDG a été atteint (recrutement externe, promotion interne ou fondateur), une variable concernant l'industrie ainsi que les interactions entre les facteurs de performance industrie-entreprise, deux mesures concernant le capital humain (âge et ancienneté en tant que PDG) et l'indice des prix à la consommation. 
+
+Finalement ce qu’on peut retenir de cette étude c’est que : Tout d’abord sur l’échantillon étudié, la rémunération des PDG était positivement liée au profit de l’entreprise (en pourcentage des ventes), donc le PDG d’une grande entreprise doit logiquement gagner plus que le PDG d’une petite entreprise. Mais lorsqu'on s’intéresse aux différences de rémunération entre des entreprises de taille égale (mesurée par les ventes), la rémunération du PDG a tendance à augmenter directement avec les bénéfices de l’entreprise mais ce constat est  nuancé car il existerait une variation suivant les secteurs.
+De plus, les PDG recrutés à l’extérieur de l’entreprise avaient une rémunération plus élevée que ceux promus en interne, ou même que les PDG qui étaient fondateurs de leur entreprise donc il semblerait que le mode d’accès au poste à un effet important sur la rémunération compte tenu de l’écart important de rémunération. En revanche, sur l’échantillon étudié, la valeur marchande de l’entreprise, l’âge du PDG, et le nombre d’années passées en tant que PDG (son ancienneté) n’ont eu que peu d’effet sur la rémunération.
+
+
+## <span style="color:darkblue">III. Description des données</span>
+<br>
+
+### A. Exploration: statistiques descriptives et études des relation
+
+<br>
+Après avoir exploré les différentes variables de la base de donnée, nous avons sélectionnés (voir la méthode ci-dessous) les variables les plus corrélées et significatives à lsalary.
+
+
+Pour notre rapport, nous avons décidé d’intégrer des variables particulières afin d’expliquer les déterminants du salaire et limiter le biais de variables omises. Les conditions pour constater un biais d’omission sont les suivantes : les deux variables explicatives (X1 et X2) doivent être corrélées entre elles. De plus, la deuxième variable explicative (X2) doit être un déterminant de la variable expliquée (Y). Nous allons confirmer ci-dessous le respect des deux conditions, ce qui justifie le basculement vers un modèle linéaire multiple.
+
+<br>
+Il faut trouver des variables qui permettraient de fournir un contrôle pertinent de la relation (et qui sont encore omises dans la régression). Afin d’admettre de nouvelles variables, il est utile de s’informer à partir d’études socio-économiques. À l’aide des articles, nous avons une idée du signe positif ou négatif de la relation. Ces variables de contrôle permettent d’éviter un estimateur biaisé, c’est-à-dire une bonne estimation causale de l’effet.
+Nous cherchons à étudier la relation entre le salaire et les ventes de l'entreprise. Tout d’abord, nous nous concentrerons sur la variable salary pour caractériser le salaire des dirigeants et sur la variable lsales pour représenter la performance de l’entreprise.
+<br>
+Après s’être appuyés sur les théories économiques et la littérature pertinente, nous nous sommes basés sur la commande chart.Correlation afin de sélectionner nos variables dépendantes et indépendantes. Les variables transformées en logarithme possèdent de nombreuses propriétés avantageuses sur la distribution des données. Le passage au logarithme permet de diminuer le nombre de valeurs aberrantes (qui correspond au respect de l’hypothèse de la méthode d’estimation par les MCO). Celle-ci  permet également de dessiner une distribution plus symétrique. D’après la matrice de corrélation, on observe que lsalary est plus corrélé significativement avec les autres variables que salary. C’est pourquoi, nous avons préféré admettre la variable lsalary. De plus, le choix de lsales comme variable dépendante s’explique par sa forte influence sur la variable expliquée (lsalary). A l'aide de la commande summary, on observe que le coefficient de la variable lsales est égale à 0,28.Le coefficient B1 est l’élasticité de Y par rapport à X. Autrement dit, l’augmentation de X (lsales) de 1% génère une variation de Y de 0.27%.  Cette influence est représentée par la faible p-valeur conduisant à rejeter l’absence de significativité au seuil de 1 %. La faible corrélation des autres variables telles que ros, nous conduit à la supprimer de notre base de donnée. 
+
+<br><br><br><br>
+```{r Packages}
+library(rmarkdown)
+library(wooldridge)
+data("ceosal1")
+attach(ceosal1)
+library("dplyr")
+library(tidyverse)
+library(haven)
+library(rstatix)
+library(kableExtra)
+library(PerformanceAnalytics)
+library("dplyr")
+library(sjPlot)
+library(sjmisc)
+library(sjlabelled)
+library(ggplot2)
+library(ggridges)
+library(gridExtra)
+library(ggpubr)
+library(ggExtra)
+library(ggthemes)
+library(RColorBrewer)
+library(lattice)
+library(gridExtra)
+library(grid)
+library(performance)
+library(see)
+library(patchwork)
+library(car)
+library(lmtest)
+library(nortest)
+library(xfun)
+library(rmarkdown)
+library(plm)
+```
+
+```{r matrice de corrélation bis}
+ceosal1_work2<- ceosal1[, c(-1:-3,-5,-13)]
+chart.Correlation(ceosal1_work2, histogram = TRUE, pch = 17)
+```
+<br>
+Le corrélogramme résume les principales variables que nous allons utiliser pour la base de données. La figure exprime en revanche une relation négative entre le logarithme des ventes et le rendement des capitaux propres.
+
+<br>
+```{r corrplot bis}
+library(corrplot)
+ceosal1_work <- ceosal1[, c(-1,-2,-3,-5,-6,-7,-8,-9,-10,-13)]
+M1<-cor(ceosal1_work)
+corrplot(M1,type="lower",method="ellipse")
+```
+<br>
+
+Nous avons exploré les données et effectué une représentation des statistiques de base à l'aide de la commande kable.
+
+<br>
+```{r tableau statistique}
+table_stat <- ceosal1 %>% get_summary_stats(lsalary,lsales,roe,show=c("n","min","max","mean","sd"), type = "common")
+
+kable(table_stat, digits = 2) %>% kable_minimal()
+```
+<br><br>
+
+
+### B. Exploration: relations bivariées
+
+<br>
+
+```{r plot/ boxplot}
+
+mod_1<-lm(lsalary~lsales)
+reg<-lm(lsalary~roe)
+ceosal1$secteur<-sample(c("indus","finance","consprod","utility")
+,209, replace=T)
+
+sub_secteur<-subset(ceosal1, ceosal1$secteur == "consprod" |  ceosal1$secteur== "indus" | ceosal1$secteur == "finance"|ceosal1$secteur == "utility")
+
+type_consprod<-subset(sub_secteur,ceosal1$secteur == "consprod")
+type_indus<-subset(sub_secteur,ceosal1$secteur == "indus")
+type_finance<-subset(sub_secteur,ceosal1$secteur == "finance")
+type_utility<-subset(sub_secteur,ceosal1$secteur == "utility")
+```
+
+```{r}
+attach(ceosal1)
+```
+
+
+```{r}
+par(mfrow=c(2,2))
+
+plot(lsales,lsalary, col = "blue", xlab =
+"log(ventes)", main = "Log(ventes) et Log(salaire)")
+abline(mod_1,col="blue",lwd=2)
+
+plot(roe,lsalary, col = "green", xlab =
+"Expérience PDG", main = " Rendement des capitaux propres et Log(salaire)")
+
+abline(reg,col="green",lwd=2)
+
+```
+
+Dans un deuxième temps, passons à une analyse bivariée (appelée distribution conjointe) . Pour cela, nous allons utiliser les commandes boxplot et plot. Nous trouvons une relation positive et linéaire à la fois entre log(ventes) et log(salary) ainsi qu’entre le rendement des capitaux propres et le log(salaire). Ces relations confirment la revue de littérature que nous avons parcourue. (boxplot)
+
+<br><br>
+
+<span style="text-decoration: underline;"> Le log(salaire) des dirigeants selon les secteurs.</span>
+
+<br><br>
+
+```{r boxplot}
+gg1 <- ggplot(sub_secteur, aes(x =lsalary , y = secteur, fill = secteur))+ 
+geom_boxplot() + 
+xlab("log (salaire)(X)") + 
+scale_y_discrete("", "")+ 
+theme_hc()
+
+gg2 <- ggplot(sub_secteur, aes(x = lsalary, y = secteur, fill = secteur)) + 
+geom_boxplot() +
+geom_jitter(shape = 16, position = position_jitter(0.3)) + 
+xlab("log (salaire)(X)") + scale_y_discrete("", "") + 
+theme_hc()
+
+gg3 <- ggplot(sub_secteur, aes(x = lsalary, y = secteur, fill = secteur)) + 
+geom_boxplot() + 
+xlab("log (salaire)(X)") + 
+geom_vline(aes(xintercept = mean(type_consprod)), linetype = "solid", col = "red", size = 0.8) +
+geom_vline(aes(xintercept =median(type_consprod)), linetype = "longdash", col = "red", size=0.8) + 
+geom_vline(aes(xintercept = mean(type_finance)), linetype = "solid", col = "blue", size =0.8)+ 
+geom_vline(aes(xintercept = median(type_finance)), linetype = "longdash", col = "blue",size=0.8)+ 
+geom_vline(aes(xintercept = mean(type_indus)), linetype = "solid", col = "pink", size = 0.8)+ 
+geom_vline(aes(xintercept = median(type_indus)), linetype = "longdash", col = "pink", size = 0.8) +
+geom_vline(aes(xintercept =median(type_utility)), linetype = "longdash", col = "red", size=0.8) + 
+geom_vline(aes(xintercept = mean(type_utility)), linetype = "solid", col = "blue", size =0.8)+
+theme_hc()
+
+grid.arrange(gg1, gg2, nrow = 2)
+
+```
+<br><br>
+D’après les études, le salaire des dirigeants est fonction du secteur d’activité. Pour cela, nous avons décidé de représenter une boîte à moustache représentant le log(salaire) en fonction des différents secteurs: industriel, financier, de transport (ou d’utilité) et de consommation. L’analyse par la boîte à moustache permet d’obtenir les médianes des logarithmes du salaire pour tous les secteurs d’activité.  Le graphique montre que le log(salaire) des dirigeants est plus élevé dans le secteur industriel. Visuellement, nous observons un log(salaire) assez proche entre un dirigeant travaillant dans le secteur de consommation et d’utilité. Le secteur ayant un log(salaire) plus faible est le secteur de la finance. Ce résultat paraît surprenant.  
+<br><br>
+
+## <span style="color:darkblue">IV. Résultats empiriques</span>
+
+<br>
+
+### A. Estimations des spécifications différentes
+
+<br>
+On cherche à étudier la relation entre le salaire et les performances de l’entreprise (mesurée à travers la variable lsales). On cherche à étudier la relation entre le salaire et la performance de l’entreprise grâce au modèle de régression multiple, en contrôlant par les variables roe et secteur. 
+
+Lsalary= β0 + β1 (lsales) + ui
+<br>
+Lsalary= β0 + B1 (lsales) + β2 (roe)+ ui
+<br>
+Lsalary= β0 + β1 (lsales) + β2 (roe)+ β3 (secteur) + ui
+
+<br>
+```{r modèle 1 bis,include=FALSE}
+mod_1<-lm(lsalary~lsales)
+summary(mod_1)
+```
+
+```{r modèle 2 bis,include=FALSE}
+mod_2<-lm(lsalary~lsales+roe)
+summary(mod_2)
+```
+
+```{r modèle 3 bis,include=FALSE}
+mod_3<-lm(lsalary~lsales+roe+secteur)
+summary(mod_3)
+```
+
+### B. Tableau avec les différents modèles
+```{r tab model}
+tab_model(mod_1, mod_2, mod_3, digits=2,show.ci= FALSE,show.se= TRUE, 
+show.p=TRUE, p.style = "stars", vcov.fun = "vcovHC", vcov.type = "HC1",
+string.pred = " ", string.est=" Mean (se)", collapse.se= TRUE,
+dv.labels =c("(1)","(2)","(3)"))
+```
+<br>
+
+Pour ajouter de nouvelles variables indépendantes, il est nécessaire d’étudier les relations entre elles et avec la variable dépendante (lsalary). Si une variable de contrôle est fortement corrélée avec une autre variable indépendante, on parle de problème de multicolinéarité. Pour admettre une nouvelle variable de contrôle, il faut inclure celles-ci dans un modèle de régression, et voir si l’inclusion d’une, amène à supprimer la significativité de la première variable. Si c’est le cas, il faut choisir la variable qui capture la plus grosse part des variations de Y. 
+<br><br>
+Cependant, si celles-ci restent significatives, à priori il n’y a pas de problème de multicolinéarité. D’après la commande tab_model les variables lsales et roe restent significatives (p<0.001). La variable roz est égale à 0.02.  Le paramètre de pente B2 mesure la variation du log(salaire) lorsque le rendement des capitaux propres augmente d'un point de pourcentage. L’augmentation de la variable roe a un effet positif sur le salaire.  Le basculement vers un modèle linéaire multiple avec l’ajout de la variable roe fait passer le coefficient de lsales de  0.26 à 0.28. 
+<br><br>
+Dans ce cas, chaque variable indépendante explique une part individuelle des variations de la variable expliquée. Mais il peut y avoir un biais dû à l’omission des différents secteurs dans notre régression. Afin d’étudier l’influence des secteurs sur le log(salaire) des dirigeants, nous avons généré une nouvelle variable appelée secteur regroupant les quatre secteurs: industrie, consommation, finance et transport.
+<br><br>
+L’exclusion du secteur consprod modifie simplement l’interprétation des estimations de coefficients. Elle servira de référence et l’interprétation se fera par rapport à cette dernière (passant de l’absolu au relatif). L’estimation du coefficient du secteur (industrie) indique qu’en moyenne, le niveau de salaire des dirigeants faisant partie du secteur industriel sont plus élevés que ceux travaillant dans le secteur de consommation  d’environ 14% ( à nombre de ventes et rendement de capitaux propres égales). L’ajout des différents facteurs, nous observons toujours cette augmentation du salaire. Cette observation traduit la robustesse du coefficient. 
+<br><br><br>
+
+```{r test conjoint ellipse}
+
+confidenceEllipse(mod_2, fill = T, lwd = 2, which.coef = c("lsales", "roe"),
+main = "Ensemble de confiance à 95")
+
+confidenceEllipse(mod_2, fill = T, lwd = 2, which.coef = c("lsales", "roe"),
+vcov. = vcovHC(mod_2, type = "HC1"), col = "red", add = T)
+```
+<br><br>
+Afin d’augmenter en précision, nous pouvons effectuer le test conjoint F et plus précisément l’ensemble de confiance. Nous le visualisons pour nos deux coefficients (présent dans le mod_2), nous utilisons la fonction confidenceEllipse() du package car. Nous introduisons aussi la correction de White pour corriger l'hétéroscédasticité L’ellipse ne croise jamais 0 ni en abcisse ni en ordonnée. Par définition, tous les coefficients (lsales et roe)  pris conjointement ne présentent jamais dans 95% des cas la valeur 0 .Je ne peux dire que β1=β2= 0.  
+<br><br>
+Pour analyser la qualité de la régression linéaire, nous nous basons sur deux instruments: le R^2 et le SER. 
+Le R2  est passé de 21% (1) à 27%  dans le troisième modèle. De plus, le SER (standard error) est passé de 0.50 à 0.48. L’intégration du secteur ne fait pas beaucoup varier le R2 du modèle, c’est pourquoi nous nous concentrerons essentiellement sur le modèle 2. L’augmentation du R^2 ajusté et la diminution de l’indicateur SER traduit une amélioration de la qualité du modèle. La diminution du SER en passant d’un modèle linéaire simple à multiple exprime une meilleure précision et ajustement entre ma droite et les différents points d’observations. <br>
+
+### C. Comparaisons des estimations (visualisation)
+
+<br>
+```{r Visual}
+REG <- plot_models (mod_1, mod_2, mod_3,show.values = TRUE, value.size= 2.1,
+spacing = 0.76, dot.size = 1.9, line.size = 1.3,
+vcov.fun = "vcovHC", vcov.type= "HC1", vline.color = "red",
+colors = "Set1", m.labels = c("(1)", "(2)", "(3)"))
+REG + theme_tufte() + ylab("Variables") + labs(y= "Mean (se)",
+x ="Predictors", color= "Models (OLS)")
+```
+
+<br><br>
+Cette visualisation offre la possibilité de comparer la moyenne des standards errors  de chaque variable en fonction des modèles. Nous observons ainsi que la variable (lsales) gardent une variation assez constante même avec l’ajout de variables. Cela montre que son effet est toujours aussi bien estimé notamment dans le modèle 2. Néanmoins, si la variable roe est  proche de 0, celle-ci reste significative (p-valeur< 0.01). Tandis que les différents secteurs d’activité chevauche la valeur 0 et par conséquent ces coefficients ne sont pas significatifs. 
+<br>
+
+### D. Vérification des hypothèses
+
+<br>
+À présent, nous vérifions les hypothèses du modèle linéaire multiple. On suppose que les échantillons sont indépendamment et identiquement distribués. 
+Dans cette partie, nous analyserons pas pour des raisons théoriques le modèle 1 puisqu’il sert de modèle de compréhension. Nous cherchons à analyser les autres modèles et notamment le modèle 2. 
+
+<br>
+<u>D.1/  Distribution des résidus</u>
+<br>
+
+```{r Distribution des résidus}
+hist(mod_2$residuals,breaks = 20, main = "Modèle 2")
+```
+
+L’histogramme représente la distribution des résidus et donne une idée sur la normalité de celle-ci. Les résidus sont globalement normaux. 
+
+<br>
+
+<u>D.2/  Diagnostic plot : QQPlot</u> 
+
+<br>
+```{r}
+plot(mod_2, 2, main = "Modèle 2")
+```
+
+Le graphique normal Q-Q nous renseigne  sur la normalité de la distribution des résidus  Si la forme correspond à la droite de Henri (représentant la distribution théorique), alors la distribution est normale. Le modèle 2 tend à suivre cette droite sauf pour la queue de distribution dû aux valeurs aberrantes).  Nos erreurs restent tout de même normalement distribuées. 
+
+<br>
+<u>D.3/ Test de Lilliefors : normalité/</u>
+
+```{r test de normalité}
+lillie.test(mod_2$residuals)
+```
+<br>
+Le test de normalité nous fait rejeter  Ho et par conséquent supposer l'absence de normalité des résidus .  
+
+<br>
+<u>D.4/ Diagnostic plot</u>
+```{r}
+plot(mod_2, 4, main = "Modèle 2")
+```
+
+Le graphique normal Q-Q nous renseigne  sur la normalité de la distribution des résidus  Si la forme correspond à la droite de Henri (représentant la distribution théorique), alors la distribution est normale. Le modèle 2 tend à suivre cette droite sauf pour la queue de distribution dû aux valeurs aberrantes).  Nos erreurs restent tout de même normalement distribuées. 
+
+<br>
+<u>D.5/ Linéarité de la relation : Errors vs. Fitted</u>
+<br>
+```{r Linéarité}
+plot(mod_2, 1, main = "Modèle 2")
+```
+<br><br>
+Le Graphique residuals vs fitted valide l’hypothèse de linéarité de la régression  car les résidus ne présentent pas d’organisation particulière (schéma type). La linéarité suppose une  distribution au hasard et donc une absence d’influence des résidus sur Y. 
+
+<br>
+<u>D.6/ Outliers</u>
+<br>
+
+```{r outliers}
+plot(mod_2, 4, main = "Modèle 2")
+```
+
+Les outliers sont mesurés à travers  la distance Cook’s. On évalue chaque observation, 0 signifiant qu’il n’y a pas de déviation par rapport à ce que ça devrait être.  Autrement dit, plus la distance est élevée, plus la déviation est importante et donc il y a plus de chances que les valeurs soient considérées comme des outliers. Comme nous l’avions vu précédemment, en queue de distribution il y a 3 valeurs (164,174 et 178) s’écartant du 0. On estime qu’à partir de 0,10, cela devient inquiétant, ici ce n’est pas le cas. 
+
+<br>
+<u>D.7/  Homoscédasticité des erreurs</u>
+<br>
+```{r Homoscédasticité bis}
+plot(mod_2, 3, main = "Modèle 2")
+```
+<br>
+
+Le graphique Scale-location permet de détecter la présence d’hétéroscédasticité. Elle illustre la dispersion de mes résidus selon la variable estimée (variable de X). Ici les écarts sont à peu près sous la même amplitude, donc on est en présence d’homoscédasticité. Nous validons le respect des différentes hypothèses. 
+
+<br>
+```{r}
+library(lmtest)
+bptest(mod_2)
+```
+<br>
+Nous pouvons, à l'aide du test de Breush-Pagan (White), tester si les erreurs sont homoscédastiques. Rappelons que Ho signifie que les erreurs sont homoscédastiques et que H1 : les erreurs sont hétéroscédastiques. La p-valeur me fait rejeter l’hypothèse Ho au seuil  de 5%.  Nous pouvons alors considérer que les erreurs sont homoscédastiques.
+<br>
+(Lorsque nous avons produit les tableaux statistiques nous avons appliqué la correction de White pour corriger un potentiel problème d'hétéroscédasticité).
+
+<br>
+
+<u>D.8/ Absence de colinéarité parfaite entre variables indépendantes (VIF)</u>
+
+<br>
+```{r VIF bis}
+vif(mod_3)
+```
+
+Dans un premier temps, commençons par le test déterminant la présence de multicolinéarité. Nous exprimons la variable indépendante comme une combinaison linéaire de tous les variables (contrôle). On veut voir à quel point les autres facteurs déterminent la variation d’autres facteurs. 
+<br><br>
+ Il est primordial que le vif soit inférieur à 5 ou 10 (en fonction du seuil fixé), afin de respecter l’hypothèse de l’absence de multicolinéarité entre variables indépendantes. Les résultats sont plutôt faibles, ils tournent autour de 1 ou On peut conclure avec ce test de l’absence d’une multicolinéarité entre les variables indépendantes.
+<br>
+
+<u>D.9/ Vérification avec la commande checkmodel</u>
+<br>
+
+Pour aller plus loin, nous avons proposé une autre visualisation (à l’aide de la commande check model)  afin de rendre compte le respect des différentes hypothèses de notre modèle.
+<br>
+
+```{r checkmodel bis}
+check_model(mod_2)
+```
+<br>
+
+### E. Comparaison des indices de chaque modèle
+
+<br>
+```{r indice modèle,include=FALSE}
+compare_performance(mod_1, mod_2, mod_3,rank = TRUE, metrics = "common")
+```
+
+```{r}
+plot(compare_performance(mod_1, mod_2, mod_3,rank = TRUE, metrics = "common"))
+```
+<br>
+Nous projetons plusieurs indicateurs de qualité sur nos différents modèles estimés. Rappelons que le R2 est intéressant pour le modèle simple,mais que le R2 ajusté (compte tenu de ses propriétés de calcul) est meilleur pour les  modèles multiples. L’écart prononcé entre le modèle 1 et 2  (à propos du R2) justifie la meilleure qualité du modèle 2. De plus, l’indice RMSE (erreur quadratique moyenne) est plus faible dans le modèle 2 que le modèle 3.  Les indicateurs de critères d’informations statistiques (BIC et AIC) sont les plus élevés dans le deuxième modèle. Compte tenu de ces observations, le modèle 2 reste le meilleur.
+<br>
+
+## <span style="color:darkblue">V. Résultats et discussion</span>
+<br>
+
+### A. Validité interne
+
+<br>
+Dans un premier temps, concentrons- nous sur la variable d’intérêt et la relation principale illustrée dans notre modèle de base. L’ajout de variables de contrôle roe (rendement des capitaux propres) entraîne une augmentation de la valeur de log(salaire) des dirigeants (tout en restant significative). Néanmoins, l’ajout de la variable secteur (regroupant l’industrie, la finance, la consommation et le transport) diminue le coefficient du log(salaire) mais reste non significatif (ceteris paribus). Dans un second temps , analysons la qualité globale des estimations: l’ajout de la variable représentant le rendement des capitaux propres (en tant que variable de contrôle) augmente considérablement le R^2 passant de 0.20 (1)  à 0.27 (2). Autrement dit, 27% de la variation de lsalary est expliquée par le changement d’une unité de nos variables de contrôle. Nous pouvons donc considérer cette variable comme un facteur fortement explicatif du salaire des dirigeants d’entreprise. Néanmoins, il reste encore des variables omises, c'est-à-dire que 70% de la variation de lsalary n’est pas expliquée dans notre modèle. La non corrélation de la variable ros (exprimant le rendement des actions) avec le logarithme du salaire est à questionner. Nous pouvons tenter à l’aide d’une autre base de données, expliquer les autres facteurs influençant la variation du salaire. A travers la revue de littérature, l’âge, le niveau scolaire, le profit sont des facteurs potentiels. 
+<br>
+Afin de vérifier la validité interne, on se repose sur le respect des différentes hypothèses des estimateurs par la méthode des MCO.Ces hypothèses sont respectées ce qui souligne la qualité des estimateurs.Cependant, lorsque l’on regarde notre R^2 ajusté, celui-ci reste très faible (0.27). Nos résultats conduisent seulement à une validité interne partielle. De plus, il existe cinq sources impliquant une violation de la première hypothèse des moindres carrés. 
+
+<br>
+Le premier est le biais de variables omises, dans notre cas, le R2 est faible ce qui peut nous amener à nous questionner sur ce potentiel biais. Le deuxième est la mauvaise spécification de la forme fonctionnelle, ici le terme d’erreur ne semble pas augmenter lorsque X augmente. Il n’existe pas non plus de biais de sélection dans notre modèle.Et enfin, nous ne sommes pas en présence de causalité inverse car le salaire ne peut d’aucune façon expliquer les variables de contrôles ajoutées.
+<br><br><br><br>
+
+
+
+<br>
+
+
+```{r}
+library(wooldridge)
+data("ceosal2")
+attach(ceosal2)
+```
+Pour vérifier la validité interne de nos résultats nous pouvons utiliser la base de données ceosal2, et voir si finalement nos résultats sont valides dans un autre échantillon de cette population ( ceosal1 et ceosal2 étant deux échantillons d’une même population) mais présentent quelques différences au niveau des variables proposées. En effet, pour que nos résultats soient valides il ne faut pas qu’il y ait de variables omises, mais les facteurs sont-ils tous disponibles dans notre base de données de départ? Auquel cas,  nous sommes confrontés à une limite de nos résultats. La seconde base que l’on a en notre possession apporte des informations sur le dirigeant tandis que la première était plutôt portée sur l’entreprise elle-même et son secteur, il peut alors être pertinent de  voir ce que l’on obtient en suivant les mêmes étapes que pour la première base de données avec des variables de contrôle différentes. 
+<br><br>
+En partant de la base de données ceosal2 et de ce que  nous dit la littérature, on va sélectionner les variables qui nous semblent les plus pertinentes pour répondre à notre question de départ.
+<br>
+Rappelons-le, notre objectif était d’estimer l’effet des ventes d’une entreprise sur la rémunération de son PDG. Mais aussi de déterminer quelles variables permettent de fournir un contrôle pertinent de la relation?
+L’étude de la littérature sur le sujet et l’observation des données nous permettent de sélectionner les variables nécessaires. Finalement nous conservons lsalary comme variable à expliquer, plutôt que salary, car il permet de symétriser la distribution du salaire, et répond mieux aux tests de corrélation avec les autres variables que nous avons effectué de notre côté. 
+<br>
+Ensuite nous prenons lsales comme variable explicative, ce qui correspond au total des ventes de la firme en 1990 en millions (et en log), car nous nous demandons si les ventes d’une entreprise ont un impact sur la rémunération de son PDG. Il est donc logique de prendre les ventes pour tenter d’y répondre. 
+<br>
+Enfin, la littérature et l’observation des données nous aura fait choisir les variables lmktval (qui correspond à la valeur marchande de l’entreprise fin 1990 en log), profits (à savoir les bénéfices de l’année 1990 en millions). La variable ceoten ( le nombre d’années passées par PDG en tant que tel au sein de l’entreprise) devrait selon la littétature avoir un effet sur lsalary. Cependant, lorsque nous effectuons un test (avec la commande summary) entre lsalary et ceoten, ceoten n'est pas significatif, ce qui nous conduit à ne pas l'inclure dans nos modèles.
+<br><br><br>
+
+<u>1. Exploration : statistiques descriptives et étude des relations</u>
+<br>
+
+```{r matrice de corrélation}
+chart.Correlation(ceosal2[,c(2,3,4,5,6,8,10,11,12,15)],histogram=TRUE, pch=60)
+```
+
+La matrice de corrélation ci-dessus nous permet de confirmer le choix de nos variables. Finalement on sélectionne lsalary car il y a plus de corrélation avec les autres variables que salary. 
+On ne conserve pas la variable âge puisqu’il n’y a pas ou très peu de corrélation significative entre lsalary/age, cela confirme par ailleurs la littérature et notamment l’étude citée précédemment de John R. Deckop. Il n’y a pas de corrélation entre lsalary et grad ou college, raison pour laquelle on ne conserve pas ces variables (même si c’est pourtant contraire à la théorie du capital humain) . De même qu’il n’y a pas de corrélation entre lsalary et profmarg. 
+
+<br><br>
+```{r Tableau statistique}
+table_stat <- ceosal2 %>% get_summary_stats(lsalary,lmktval,lsales,
+ceoten,show=c("n","min","max","mean","sd"),type = "common")
+
+kable(table_stat, digits = 2) %>% kable_minimal()
+
+```
+<br>
+Ces variables peuvent ainsi être représentées par le tableau suivant qui nous présente quelques statistiques descriptives les concernant. 
+Ainsi dans cet échantillon (n= 177), les pdg en poste le sont en moyenne depuis environ 8 ans (7,96). Le plus ancien pdg parmi eux l’est depuis 37 ans. Pour ce qui est du total de ventes en moyenne, il est de 7,23, exprimé en logarithme, tandis que le logarithme du salaire moyen d’un PDG de l’échantillon est de 6,58.
+
+<br><br>
+<u>2.Exploration  : relations bivariées</u>
+<br><br>
+Nous pouvons à présent passer à une analyse bivariée entre les différentes variables et le logarithme du salaire (lsalary). Celles ci sont représentées par les visualisations ci-dessous :
+
+<br>
+
+```{r plot}
+par(mfrow=c(2,2))
+
+plot(lsalary~lsales, data = ceosal2, col = "pink", xlab =
+"log(ventes)", main = "Log(ventes) et Log(salaire)")
+
+plot(lsalary~lmktval, data = ceosal2, col = "red", xlab =
+"log(valeur marchande)", main = "Log(valeur marchande) et Log(salaire)")
+
+plot(lsalary~profits, data = ceosal2, col = "blue", xlab =
+"profits", main = "Profits et Log(salaire)")
+
+
+```
+<br><br><br>
+Nous pouvons finalement observer une relation linéaire et positive entre le logarithme des ventes et celui du salaire. De même pour le log de la valeur marchande (lmktval). Nous pouvons dès lors penser qu’il existe un lien entre ces variables. Pour ce qui est du profit de l’entreprise et du nombre d’années d’expérience en tant que PDG, l'existence d’une relation semble moins évidente mais ces variables sont toutes deux corrélées à lsales. Le profit (les bénéfices de l’entreprise) étant une des trois variables représentant la performance d’une entreprise, avec les ventes et la valeur des actions de l’entreprise sur le marché, nous avons décidé de l’inclure dans notre sélection. De même que nous avons voulu intégrer le nombre d’années passées en tant que PDG, pour voir si l'expérience d’un PDG influence ou non sur son salaire, et ainsi pouvoir effectuer une comparaison avec l’étude de John R. Deckop, qui s'intéresse à l’influence de différentes variables sur le salaire des PDG et qui arrivait rappelons-le aux conclusions concernant son échantillon d’étude que la valeur marchande de l’entreprise et le nombre d’années passées en tant que PDG (son ancienneté) n’avaient eu que peu d’effet sur la rémunération. 
+ 
+<br>
+
+<u>Corrélogramme avec les variables sélectionnées</u>
+
+<br><br>
+```{r corrplot}
+ceosal2_work <- ceosal2[, c(-1:-5,-7,-9,-13:-15)]
+M<-cor(ceosal2_work)
+corrplot(M,type="lower",method="number",diag=FALSE)
+```
+
+<br>
+
+Le corrélogramme est une deuxième visualisation permettant de mettre en évidence le lien entre toutes les variables. On observe une corrélation entre lsales et lsalary= 0.53. Une corrélation de lsalary et lmktval de 0.48 et de 0.40 entre lsalary/profits. Il existe une grande corrélation entre lmktval et profits. Il faut rester prudent face au problème de multicolinéarité.Il est fort probable que les deux variables traduisent une partie similaire de la variation lsalary. Les conditions de l'omission de variable est respecté. La variable lsales est corrélée avec les autres régresseurs. La faible corrélation de ceoten avec lsales confirme la bonne décision que nous avons fait en excluant ceoten. 
+
+
+NB: Toujours pour calquer cette étude, nous avons voulu voir si ses conclusions concernant le fait que le mode d’accès au poste de PDG a un effet important sur la différence de rémunération entre les PDG, puisqu’il insistait sur le fait que finalement les recrues externes étaient mieux rémunérées que ceux ayant atteint le poste suite à une promotion interne. A partir de la variable comten, disponible dans la base de données, qui nous donne le nombre d’années du PDG au sein de la compagnie, et de la variable ceoten, à savoir uniquement le nombre d’années passées en tant que PDG , on a alors créé une nouvelle variable qui montrerait finalement quels sont les PDG issus d’une promotion interne (= nombre d’années passées au sein de l’entreprise supérieur à son nombre d’années à son poste actuel). Nous n’y sommes malheureusement pas parvenu puisque si les PDG ayant atteint le poste à la suite d’une promotion interne sont moins payés que ceux de l'extérieur, les fondateurs étant à la fois les PDG de leur entreprise sont également parmi ceux étant moins rémunérés, or cette troisième catégorie de PDG se confond avec les recrues externes dans le sens ou leur comten= ceoten tout comme ces derniers. Nous avons donc dû abandonner cette idée. 
+
+<br>
+
+<u>3. Résultats empiriques</u>
+<br>
+
+<u>3.a) Estimations des spécifications différentes</u>
+<br><br><br>
+
+```{r Modèle 1,include=FALSE}
+mod.1 <- lm(lsalary~lsales)
+summary(mod.1)
+```
+
+```{r Modèle 2,include=FALSE}
+mod.2 <- lm(lsalary~lsales+lmktval)
+summary(mod.2) 
+```
+
+```{r modèle 3,include=FALSE}
+mod.3<-lm(lsalary~lsales+profits)
+summary(mod.3)
+```
+
+```{r modèle 4,include=FALSE}
+mod.4<-lm(lsalary~lsales+lmktval+profits)
+summary(mod.4)
+```
+
+
+
+<br>
+
+Pour tester, l’influence de la variable explicative X (lsales) sur la variable expliquée Y (lsalary), on peut se tourner vers la p-valeur. On constate que celle-ci est inférieure à 1% . Par conséquent, on rejette Ho, c’est-à-dire l’absence de significativité. On peut conclure qu’il existe une influence significative de lsales sur la variable lsalary. Ainsi, on peut l’inclure comme variable d’intérêt. 
+<br>
+Pour ajouter de nouvelles variables indépendantes, il est nécessaire d’étudier les relations entre elles, ainsi que leur relation avec la variable dépendante. Comme nous l’avons vu précédemment, si une variable de contrôle est fortement corrélée avec une autre variable indépendante, on parle de problème de multicolinéarité.
+<br>
+Pour admettre une nouvelle variable de contrôle, il faut inclure step by step les différentes variables dans un modèle de régression, et voir si l’inclusion d’une, amène à supprimer la significativité de la première variable. Si c’est le cas, il faut choisir la variable qui capture la plus grosse part des variations de Y. Par exemple, lsales/ lmktval sont corrélés à 0,74 (trois étoiles).  
+
+<br>
+
+Finalement la formulation des modèles qu’on retient est la suivante : 
+
+Lsalary= β0 + β1 (lsales) + ui
+<br>
+Lsalary= β0 + β1 (lsales) + β2 (lmktval) + ui
+<br>
+Lsalary= β0 + β1 (lsales) + β2 (lmktval) + β3 (profits) + ui
+<br>
+
+<br><br><br>
+
+<u>3.b) Tableau avec les différents modèles</u>
+<br><br>
+```{r tous les modèles}
+tab_model(mod.1, mod.2, mod.3, mod.4, digits=3,show.ci= FALSE,show.se= TRUE, show.p=TRUE, p.style = "stars", vcov.fun = "vcovHC", vcov.type = "HC1",
+ string.pred = " ", string.est=" Mean (se)", collapse.se= TRUE,dv.labels =c("(1)","(2)","(3)","(4)","(5)"))
+```
+<br><br>
+
+Étant donné que nous nous appuyons sur une variable logarithmique, l'interprétation est la suivante pour la variables lsales : une augmentation de X (lsales) de 1% génère une augmentation de Y (le salaire en log) d’au moins 0,16% dans tous les modèles et c’est très significatif partout donc robuste. 
+Le premier modèle montre la relation épurée entre lsalary et lsales. Le R2 (modèle simple) est égale à 0.28, ce qui signifie que 28% de la variation de lsalary est expliquée par lsales. L'introduction de lmktval fait passer le coefficient de lsales à 0.162 (tout en restant singificatif). Cette diminution signifie que que la variation de lsalary expliquée par lsales était surestimée. En effet, une partie de la variation de Y était dû au logarithme de la valeur marchande de l'entreprise. Les deux variables dépendantes restent tout de même significative ce qui signifie que chaque variable indépendante explique une part individuelle des variations de la variable expliquée (lsalary). On remarque que le R2 ajusté (ici modèle multiple) a faiblement augmenté dans le modèle 2, on passe de 28% à 29%. 
+
+
+<br>
+Dans le modèle 3, nous retirons la variable lmktval et nous introduisons la variable profits. Lorsque nous avon effectué le test entre lsalary et profits, le coefficient de la variable profits avait une forte significativité (p-valeur < 0.001). En revanche, lorsque nous l'introduisons dans le modèle, celle-ci connaît une diminution de sa significativité (p-valeur< 5%) et fait augmenter la variable lsales à 0.194. 
+
+Dans le quatrième modèle, en intégrant en même temps les deux variables (lmktval et profits), les deux cofficients perdent leur significativité. Afin d'éviter le problème de multicolinéarité, il est plus judicieux de sélectionner la variable qui explique le plus lsalary c'est-à-dire lmktval. 
+
+
+<br>
+En se basant sur le R2 ajusté, le meilleur modèle semble être le deuxième. Même si le modèle 4 présente un R2 ajusté plus élevé, les deux variables lmktval et profits ont perdu leur significativité. C'est pourquoi, il est préférable (selon le principe de parcimonie) de garder le deuxième modèle surtout qu'il présente un R2 ajusté assez proche du quatrième modèle. 
+Mais nous ne sommes qu’à près de 30% de la variation au niveau du log du salaire. 
+
+<br><br>
+
+<u>3.c) Comparaisons des estimations (visualisation)</u>
+<br><br>
+Une visualisation nous permet finalement de comparer la moyenne des standards errors  de chaque variable en fonction des modèles. Nous observons ainsi que la variable (lsales) garde une valeur assez constante même avec l’ajout de variables. 
+<br><br>
+
+```{r reg}
+REG <- plot_models (mod.1, mod.2, mod.3, mod.4, show.values = TRUE, value.size= 2.1,
+spacing = 0.76, dot.size = 1.9, line.size = 1.3,
+vcov.fun = "vcovHC", vcov.type= "HC1", vline.color = "red",
+colors = "Set1", m.labels = c("(1)", "(2)", "(3)", "(4)","(5)"))
+REG + theme_tufte() + ylab("Variables") + labs(y= "Mean (se)",
+x ="Predictors", color
+= "Models (OLS)")
+```
+
+<br><br>
+
+
+<u>4. Vérification des hypothèses</u>
+<br>
+
+<u>4.a) Distribution des résidus</u>
+<br><br><br>
+```{r résidus}
+hist(mod.2$residuals,breaks = 20, main = "Modèle 2")
+```
+<br><br>
+L’histogramme ci-dessus représente la distribution des résidus dans le modèle 5 et nous donne une idée sur la normalité de celle-ci. Les résidus semblent assez normaux. 
+<br><br>
+
+
+<u>4.b) Diagnostic plot : QQPlot par modèle</u>
+<br><br>
+```{r QQplot}
+plot(mod.2, 2, main = "Modèle 2")
+```
+
+Même s’il y a une déviation en queue de distribution,  la distribution du terme d’erreur semble normale pour le modèle 2.
+
+<br>
+
+<u>4.c) Test de Lilliefors : normalité</u>
+<br><br>
+```{r test normalité }
+lillie.test(mod.2$residuals)
+```
+Pour être confirme la normalité, nous pouvons effectuer le test de Lillefors. La p-valeur est supérieure à 5%, ce qui nous conduit à accepter l’hypothèse de normalité de la distribution (à savoir l’hypothèse H0).
+
+<br><br>
+
+<u>4.d) Linéarité de la relation : residuals vs fitted</u>
+
+<br>
+```{r}
+plot(mod.2, 1, main = "Modèle 2")
+```
+<br>
+
+Le Graphique residuals vs fitted valide l’hypothèse de linéarité de la régression  car les résidus ne présentent pas d’organisation particulière (schéma type). La linéarité suppose une  distribution au hasard et donc une absence d’influence des résidus sur Y. 
+
+<br><br>
+<u>4.e) Outliers</u>
+<br><br>
+```{r}
+plot(mod.2, 4, main = "Modèle 2")
+```
+<br><br><br>
+La distance de cook nous renseigne sur la présence ou non d’outliers, plus la distance de cook d’une observation va être grande plus on peut la considérer comme un outlier. On observe surtout une observation qui sort du lot à savoir l’observation 113 avec une distance de Cook d’environ 0,20. 
+Deux autres ressortent légèrement : l' observation 38 (distance de Cook < 0,1 et l’observation 176 avec une distance de Cook qui vaut environ 0,05.
+<br>
+A partir d’une distance de Cook 0,10 ca commence à être inquiétant, il est donc nécessaire de jeter un coup d’œil. 
+L'observation à la ligne 113 de la base de données nous renseigne un pdg de 61 ans qui a un salaire de 100 000 $, bien en dessous de ses pairs puisque c’est le salaire minimum de l’échantillon. Et pdg depuis 26 ans, même nombre d’années passées au sein de l’entreprise, c’est peut être un fondateur . L’entreprise affiche par ailleurs de bons résultats au niveau de ses ventes et de son profit. Il nous est difficile de déterminer s’il s’agit d’une erreur ou d’un cas à part, un pdg très sous payé. 
+
+<br>
+Ensuite à la ligne 38, on a également un pdg âgé de 66 ans et qui touche un salaire de 129 000$, il a fréquenté le lycée et un établissement supérieur et semble être le fondateur ou pdg suite à un recrutement externe car il travaille au sein de l’entreprise depuis 4 ans et en est le pdg depuis 4 ans aussi. Nous ne pouvons pas non plus statuer sur s’il s’agit d’une erreur ou d’un cas particulier. 
+<br><br>
+
+<u>4.f) Homoscédasticité</u>
+<br>
+```{r Homoscédasticité}
+plot(mod.2, 3, main = "Modèle 2")
+```
+<br>    
+La visualisation du graphique nous confirme l’hypothèse d’homoscédasticité, nous avions quand même corrigé un biais d’hétéroscédasticité pour plus de sécurité (lorsque nous avons fait le tab model par exemple). 
+
+<br>
+<u>4.g)Absence de colinéarité parfaite entre variables indépendantes (VIF)</u>
+<br>
+```{r VIF}
+vif(mod.2)
+```
+<br>
+
+Le VIF test doit nous renseigner sur une possible multicolinéarité entre nos variables. Il doit être en dessous de 5 pour qu’il n’y ait pas de problème de ce côté la, sinon il faudrait supprimer une variable. Finalement les VIF sont tous inférieurs à 5 donc l’hypothèse est bien vérifiée. 
+
+<br>
+<u>5. Vérification avec la commande checkmodel</u>
+<br><br>
+```{r checkmodel}
+check_model(mod.2)
+```
+<br>
+
+Nous pouvons par ailleurs revérifier à l’aide de la commande checkmodel le respect de toutes ces hypothèses, sur lequel on peut voir que toutes les hypothèses sont bien respéctées mis à part la présence de quelques valeurs aberrantes.
+
+<br><br><br>
+
+<u>6. Comparaison des indices de chaque modèle</u> 
+<br><br>
+
+```{r indices modèle, include=FALSE}
+compare_performance(mod.1, mod.2, mod.3, mod.4,
+rank = TRUE, metrics = "common")
+```
+
+
+```{r}
+
+plot(compare_performance(mod.1, mod.2, mod.3, mod.4,
+rank = TRUE, metrics = "common"))
+```
+<br>
+La comparaison des indices de chaque modèle nous permet de confirmer la raison pour laquelle nous avons choisi le modèle 2, car il ressort clairement qu’il est le meilleur des modèles proposés. L'écart prononcé entre le modèle 1 et 2 (à propos du R2) justifie la meilleure qualité du modèle 2.  Les indicateurs de critères d’informations statistiques (BIC et AIC) sont plus élevés dans le deuxième modèle. Compte tenu de ces observations, le modèle 2 reste le meilleur. 
+
+<br><br>
+
+### B. Validité externe 
+
+Nous conclurons cette étude par une discussion autour de la validité externe. Est ce que nos résultats sont applicables ailleurs que sur cette population? 
+Pour cela, nous nous contenterons finalement de voir si nos résultats rejoignent ceux des études citées dans la partie dédiée à la littérature sur le sujet.  Tout d’abord, nous sommes totalement d’accord avec le fait qu’il est difficile de définir ce qui détermine la rémunération du pdg. Qu’il s’agisse de pdg américains ou français, il ne semble pas y avoir de règle universelle qui soit applicable aux entreprises concernant le salaire de leur pdg. Si des variables de performance de l’entreprise telles que les ventes semblent avoir un rôle dans la fixation du salaire du dirigeant, nous ne sommes pas parvenu à expliquer au-delà de 30% de la variation du salaire. Il reste donc 70% de sa variation à expliquer, ce qui n’est pas rien. 
+Nous sommes plutôt d’accord avec l’étude de Ozkan (2010) pour qui il existe une relation positive entre la performance de l’entreprise et le niveau de rémunération de son pdg. En revanche, nos deux échantillons ne nous permettent pas de rejoindre la théorie du capital humain qui met l’accent sur le fait que le revenu dépend de l’éducation et du niveau de formation puisque l’échantillon ne témoignait pas d’un lien (absence de relation observée lors du test) entre le niveau d’étude et le salaire du dirigeant. 
+<br>
+Nous rejoignons également les conclusions de l'étude de Deckop concernant l’âge du PDG, et le nombre d’années passées en tant que PDG (son ancienneté) qui n’ont eu que peu d’effet sur la rémunération. Mais nous n'avons malheureusement pas pu confirmer le fait que le type de pdg avait une influence sur le salaire perçu car l'échantillon ne nous le permettait finalement pas. 
+De plus, il reste beaucoup de facteurs potentiels que nous n’avons pas pu tester et qui sont énoncés dans la littérature. Les bases de données ne permettaient pas de vérifier par exemple les facteurs énoncés par Kim et Tucker (2014) tels que la taille de l’entreprise, la qualité et la quantité de travailleurs, le sexe, ou même la composition de la gouvernance de l’entreprise. 
+En effet, il aurait pu être intéressant d’avoir des informations sur la composition du conseil d’administration lorsqu’on sait que celui-ci a un effet direct sur la fixation du salaire du PDG. Tout comme le fait que nous ne savons rien concernant le sexe du pdg, même si les femmes étaient très peu représentées (et le sont d’ailleurs encore) à atteindre des postes de dirigeants, nous ne savons pas si l’échantillon comprend des femmes tandis qu’il appparait évident qu’une très grande majorité sont des hommes.
+Un autre point à souligner c’est que cette étude s’appuie sur des données de 1990. Le contexte est relativement différent 30 ans plus tard, et de nouvelles législations sont depuis entrées en vigueur, peut être que sur des échantillons de données plus récentes il aurait été possible d’obtenir des résultats plus impressionnants. 
+<br>
+
+Ainsi, nous ne sommes pas parvenu à définir l’ensemble des facteurs dans la fixation du salaire du pdg, ce qui aurait été trop ambitieux, long et qui n’était pas l’objectif de notre rapport. Nous avons en revanche réussi à montrer l’effet des ventes (plutôt faible certes) de l’entreprise sur la rémunération de son dirigeant, ce qui était notre objectif de départ. 
+
+Finalement, malgré une amélioration de l'opacité et une meilleure transparence sur le montant des salaires, celles-ci restent encore fortement critiqué. Le lien faible que nous avons trouvé montre que les rémunérations des dirigeants sont déconnetés des performances des entreprises. 
+
+<br><br>
+
+Sources :
+<br>  
+-Deckop, J. R. (1988). Determinants of Chief Executive Officer Compensation. Industrial and Labor Relations Review, 41(2), 215–226. https://doi.org/10.2307/2523632
+<br>  
+- Manuere, F., & Hove, P. (2018). A Literature Review of the Perspectives of CEO Pay: An Analysis of Issues and Controversies. Journal of Public Administration and Governance, 8(4), 44-56.
+- Teulon, F. (2013). La rémunération des dirigeants: problème interne ou problème de société (s)?. Question (s) de management, (3), 19-32.
+
+Annexes: 
+```{r echo=TRUE, eval=FALSE}
+
+# Packages 
+library(rmarkdown)
+library(wooldridge)
+data("ceosal1")
+attach(ceosal1)
+library("dplyr")
+library(tidyverse)
+library(haven)
+library(rstatix)
+library(kableExtra)
+library(PerformanceAnalytics)
+library("dplyr")
+library(sjPlot)
+library(sjmisc)
+library(sjlabelled)
+library(ggplot2)
+library(ggridges)
+library(gridExtra)
+library(ggpubr)
+library(ggExtra)
+library(ggthemes)
+library(RColorBrewer)
+library(lattice)
+library(gridExtra)
+library(grid)
+library(performance)
+library(see)
+library(patchwork)
+library(car)
+library(lmtest)
+library(nortest)
+library(xfun)
+library(rmarkdown)
+library(plm)
+
+#CEOSAL1
+
+# Matrice de corrélation
+
+ceosal1_work2<- ceosal1[, c(-1:-3,-5,-13)]
+chart.Correlation(ceosal1_work2, histogram = TRUE, pch = 17)
+library(corrplot)
+ceosal1_work <- ceosal1[, c(-1,-2,-3,-5,-6,-7,-8,-9,-10,-13)]
+
+M1<-cor(ceosal1_work)
+corrplot(M1,type="lower",method="ellipse")
+
+# Test de significativité
+
+mod_test1<-lm(lsalary~roe)
+summary(mod_test1)
+
+mod_test2<-lm(lsalary~ros)
+summary(mod_test2)
+
+mod_test3<-lm(lsalary~indus)
+summary(mod_test3)
+
+mod.test4<-lm(lsalary~finance)
+summary(mod_test4)
+
+mod_test5<-lm(lsalary~consprod)
+summary(mod_test5)
+
+mod_test6<-lm(lsalary~utility)
+summary(mod_test6)
+
+# Tableau statistique 
+table_stat <- ceosal1 %>% get_summary_stats(lsalary,lsales,roe,show=c("n","min","max","mean","sd"), type = "common")
+kable(table_stat, digits = 2) %>% kable_minimal()
+
+# Modèles testés
+
+mod_1<-lm(lsalary~lsales)
+reg<-lm(lsalary~roe)
+ceosal1$secteur<-sample(c("indus","finance","consprod","utility")
+,209, replace=T)
+sub_secteur<-subset(ceosal1, ceosal1$secteur == "consprod" | ceosal1$secteur== "indus" | ceosal1$secteur == "finance"|ceosal1$secteur == "utility")
+type_consprod<-subset(sub_secteur,ceosal1$secteur == "consprod")
+type_indus<-subset(sub_secteur,ceosal1$secteur == "indus")
+type_finance<-subset(sub_secteur,ceosal1$secteur == "finance")
+type_utility<-subset(sub_secteur,ceosal1$secteur == "utility")
+
+
+attach(ceosal1)
+par(mfrow=c(2,2))
+
+# Analyse bivariée 
+
+plot(lsales,lsalary, col = "blue", xlab =
+"log(ventes)", main = "Log(ventes) et Log(salaire)")
+abline(mod_1,col="blue",lwd=2)
+plot(roe,lsalary, col = "green", xlab =
+"Expérience PDG", main = " Rendement des capitaux propres et Log(salaire)")
+abline(reg,col="green",lwd=2)
+
+gg1 <- ggplot(sub_secteur, aes(x =lsalary , y = secteur, fill = secteur))+
+geom_boxplot() +
+xlab("log (salaire)(X)") +
+scale_y_discrete("", "")+
+theme_hc()
+
+gg2 <- ggplot(sub_secteur, aes(x = lsalary, y = secteur, fill = secteur)) +
+geom_boxplot() +
+geom_jitter(shape = 16, position = position_jitter(0.3)) +
+xlab("log (salaire)(X)") + scale_y_discrete("", "") +
+theme_hc()
+
+gg3 <- ggplot(sub_secteur, aes(x = lsalary, y = secteur, fill = secteur)) +
+geom_boxplot() +
+xlab("log (salaire)(X)") +
+geom_vline(aes(xintercept = mean(type_consprod)), linetype = "solid", col = "red", size = 0.8) +
+geom_vline(aes(xintercept =median(type_consprod)), linetype = "longdash", col = "red", size=0.8) +
+geom_vline(aes(xintercept = mean(type_finance)), linetype = "solid", col = "blue", size =0.8)+
+geom_vline(aes(xintercept = median(type_finance)), linetype = "longdash", col = "blue",size=0.8)+
+geom_vline(aes(xintercept = mean(type_indus)), linetype = "solid", col = "pink", size = 0.8)+
+geom_vline(aes(xintercept = median(type_indus)), linetype = "longdash", col = "pink", size = 0.8) +
+geom_vline(aes(xintercept =median(type_utility)), linetype = "longdash", col = "red", size=0.8) +
+geom_vline(aes(xintercept = mean(type_utility)), linetype = "solid", col = "blue", size =0.8)+
+theme_hc()
+
+grid.arrange(gg1, gg2, nrow = 2)
+
+
+
+mod_1<-lm(lsalary~lsales)
+summary(mod₁)
+mod_2<-lm(lsalary~lsales+roe)
+summary(mod₂)
+mod_3<-lm(lsalary~lsales+roe+secteur)
+summary(mod_3)
+
+# Tab model
+
+
+tab_model(mod_1, mod_2, mod_3, digits=2,show.ci= FALSE,show.se= TRUE,
+show.p=TRUE, p.style = "stars", vcov.fun = "vcovHC", vcov.type = "HC1",
+string.pred = " ", string.est=" Mean (se)", collapse.se= TRUE,
+dv.labels =c("(1)","(2)","(3)"))
+
+# Intervalle de confiance
+
+confidenceEllipse(mod_2, fill = T, lwd = 2, which.coef = c("lsales", "roe"),
+main = "Ensemble de confiance à 95")
+
+confidenceEllipse(mod_2, fill = T, lwd = 2, which.coef = c("lsales", "roe"),
+vcov. = vcovHC(mod_2, type = "HC1"), col = "red", add = T)
+
+REG <- plot_models (mod_1, mod_2, mod_3,show.values = TRUE, value.size= 2.1,
+spacing = 0.76, dot.size = 1.9, line.size = 1.3,
+vcov.fun = "vcovHC", vcov.type= "HC1", vline.color = "red",
+colors = "Set1", m.labels = c("(1)", "(2)", "(3)"))
+REG + theme_tufte() + ylab("Variables") + labs(y= "Mean (se)",
+x ="Predictors", color= "Models (OLS)")
+
+# Vérification des hypothèses
+
+hist(mod_2$residuals,breaks = 20, main = "Modèle 2")
+
+plot(mod_2, 2, main = "Modèle 2")
+
+lillie.test(mod_2$residuals)
+
+plot(mod_2, 4, main = "Modèle 2")
+
+plot(mod_2, 1, main = "Modèle 2")
+
+plot(mod_2, 4, main = "Modèle 2")
+
+plot(mod_2, 3, main = "Modèle 2")
+
+library(lmtest)
+bptest(mod_2)
+
+vif(mod_3)
+
+check_model(mod_2)
+
+compare_performance(mod_1, mod_2, mod_3,rank = TRUE, metrics = "common")
+
+plot(compare_performance(mod_1, mod_2, mod_3,rank = TRUE, metrics = "common"))
+
+#CEOSAL2
+
+library(wooldridge)
+data("ceosal2")
+attach(ceosal2)
+
+# Matrice de corrélation
+
+chart.Correlation(ceosal2[,c(2,3,4,5,6,8,10,11,12,15)],histogram=TRUE, pch=60)
+
+# Test de significativité 
+
+mod.test1<-lm(lsalary~age)
+summary(mod_test1)
+
+mod.test2<-lm(lsalary~college)
+summary(mod_test2)
+
+mod.test3<-lm(lsalary~grad)
+summary(mod_test3)
+
+mod.test4<-lm(lsalary~comten)
+summary(mod_test4)
+
+mod.test5<-lm(lsalary~ceoten)
+summary(mod_test5)
+
+mod_test6<-lm(lsalary~profmarg)
+summary(mod_test6)
+
+# Tableau statistique
+
+table_stat <- ceosal2 %>% get_summary_stats(lsalary,lmktval,lsales,
+ceoten,show=c("n","min","max","mean","sd"),type = "common")
+
+
+kable(table_stat, digits = 2) %>% kable_minimal()
+
+par(mfrow=c(2,2))
+
+# Analyse bivariée
+
+plot(lsalary~lsales, data = ceosal2, col = "pink", xlab =
+"log(ventes)", main = "Log(ventes) et Log(salaire)")
+
+plot(lsalary~lmktval, data = ceosal2, col = "red", xlab =
+"log(valeur marchande)", main = "Log(valeur marchande) et Log(salaire)")
+
+plot(lsalary~profits, data = ceosal2, col = "blue", xlab =
+"profits", main = "Profits et Log(salaire)")
+
+# Matrice de corrélation bis
+
+ceosal2_work <- ceosal2[, c(-1:-5,-7,-9,-13:-15)]
+M<-cor(ceosal2_work)
+corrplot(M,type="lower",method="number",diag=FALSE)
+
+
+# Modèles testés 
+
+mod.1 <- lm(lsalary~lsales)
+summary(mod.1)
+
+mod.2 <- lm(lsalary~lsales+lmktval)
+summary(mod.2)
+
+mod.3<-lm(lsalary~lsales+profits)
+summary(mod.3)
+
+mod.4<-lm(lsalary~lsales+lmktval+profits)
+summary(mod.4)
+
+# Tab model
+
+tab_model(mod.1, mod.2, mod.3, mod.4, digits=3,show.ci= FALSE,show.se= TRUE, show.p=TRUE, p.style = "stars", vcov.fun = "vcovHC", vcov.type = "HC1",
+ string.pred = " ", string.est=" Mean (se)", collapse.se= TRUE,dv.labels =c("(1)","(2)","(3)","(4)","(5)"))
+
+
+REG <- plot_models (mod.1, mod.2, mod.3, mod.4, show.values = TRUE, value.size= 2.1,
+spacing = 0.76, dot.size = 1.9, line.size = 1.3,
+vcov.fun = "vcovHC", vcov.type= "HC1", vline.color = "red",
+colors = "Set1", m.labels = c("(1)", "(2)", "(3)", "(4)","(5)"))
+
+REG + theme_tufte() + ylab("Variables") + labs(y= "Mean (se)",
+x ="Predictors", color
+= "Models (OLS)")
+
+# Vérification des hypothèses
+
+hist(mod.2$residuals,breaks = 20, main = "Modèle 2")
+plot(mod.2, 2, main = "Modèle 2")
+lillie.test(mod.2$residuals)
+plot(mod.2, 1, main = "Modèle 2")
+plot(mod.2, 4, main = "Modèle 2")
+plot(mod.2, 3, main = "Modèle 2")
+vif(mod.2)
+check_model(mod.2)
+compare_performance(mod.1, mod.2, mod.3, mod.4,
+rank = TRUE, metrics = "common")
+plot(compare_performance(mod.1, mod.2, mod.3, mod.4,
+rank = TRUE, metrics = "common"))
+
+
+```
+
+
+
